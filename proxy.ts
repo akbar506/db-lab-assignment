@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { authRoutes, protectedRoutes } from "./routes";
 import NextAuth from "next-auth";
 import authConfig from "@/auth.config";
@@ -9,7 +9,16 @@ export default auth((request) => {
     const { nextUrl } = request;
     const isLoggedIn = !!request.auth;
     const isAuthRoute = authRoutes.includes(nextUrl.pathname);
-    const isProtectedRoute = protectedRoutes.includes(nextUrl.pathname);
+    const isProtectedRoute = protectedRoutes.some((route) => {
+        if (route === "/") {
+            return nextUrl.pathname === route;
+        }
+
+        return (
+            nextUrl.pathname === route ||
+            nextUrl.pathname.startsWith(`${route}/`)
+        );
+    });
 
     if (isAuthRoute) {
         if (isLoggedIn) {
@@ -27,5 +36,5 @@ export default auth((request) => {
 })
 
 export const config = {
-    matcher: ["/", "/sign-up", "/sign-in"], // Specify the routes the middleware applies to
+    matcher: ["/", "/surveys/:path*", "/sign-up", "/sign-in"], // Specify the routes the middleware applies to
 };

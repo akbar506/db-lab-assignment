@@ -19,7 +19,7 @@ export default {
                 email: { label: "Email", type: "email" },
                 password: { label: "Password", type: "password" },
             },
-            async authorize(credentials: any): Promise<any> {
+            async authorize(credentials) {
                 const email = String(credentials?.email ?? "").toLowerCase();
                 const password = String(credentials?.password ?? "");
 

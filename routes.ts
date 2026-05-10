@@ -4,5 +4,6 @@ export const authRoutes: string[] = [
 ]
 
 export const protectedRoutes: string[] = [
-    "/"
+    "/",
+    "/surveys"
 ]
