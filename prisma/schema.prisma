@@ -13,13 +13,12 @@ model User {
   username    String    @db.VarChar(50)
   email       String    @unique @db.VarChar(255)
   password    String    @db.VarChar(255)
-  reset_otp   String?   @db.VarChar(10)
-  otp_expiry  DateTime? @db.DateTime(0)
   created_at  DateTime? @default(now()) @db.Timestamp(0)
   updated_at  DateTime? @updatedAt
 
   surveys     Survey[]
   sessions    Session[]
+  accounts    Account[]
 }
 
 model Survey {
@@ -49,7 +48,30 @@ model Session {
   token      String   @unique
   user_id    String   @db.Char(36)
   expiresAt  DateTime
+  ipAddress String?
+  userAgent String?
   createdAt  DateTime @default(now())
+  updatedAt DateTime? @updatedAt
+
+  user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String  @id @default(uuid())
+
+  user_id                String  @db.Char(36)
+
+  accountId             String
+
+  providerId            String
+
+  access_token           String? @db.Text
+
+  refresh_token          String? @db.Text
+
+  accessTokenExpiresAt  DateTime?
+
+  refreshTokenExpiresAt DateTime?
 
   user User @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
